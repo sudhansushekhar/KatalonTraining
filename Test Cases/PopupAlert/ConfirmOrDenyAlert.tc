@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>ConfirmOrDenyAlert</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>237c1e78-9eca-4b15-be21-3c9026491a0c</testCaseGuid>
+</TestCaseEntity>

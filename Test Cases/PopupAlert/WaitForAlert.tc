@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>WaitForAlert</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a374a82a-e64f-40b8-8a27-8d74c34390d2</testCaseGuid>
+</TestCaseEntity>

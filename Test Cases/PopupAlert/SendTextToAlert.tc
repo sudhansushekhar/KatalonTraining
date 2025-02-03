@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>SendTextToAlert</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>708793a1-e446-421f-8e62-e8178bb90e1f</testCaseGuid>
+</TestCaseEntity>

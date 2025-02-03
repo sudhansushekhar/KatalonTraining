@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>AlertAcceptOnly</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>a001e682-7a21-4da2-9be6-b48795dcf1a1</testCaseGuid>
+</TestCaseEntity>

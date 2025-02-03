@@ -22,37 +22,35 @@ import com.kms.katalon.core.annotation.AfterTestSuite
 import com.kms.katalon.core.context.TestCaseContext
 import com.kms.katalon.core.context.TestSuiteContext
 
-class TestListenerLogin {
+class TestListeners {
 	/**
 	 * Executes before every test case starts.
 	 * @param testCaseContext related information of the executed test case.
 	 */
-	@BeforeTestCase
-	def goToLoginPage(String url) {
-		WebUI.openBrowser('')
-		WebUI.maximizeWindow()
-		WebUI.navigateToUrl('https://katalon-demo-cura.herokuapp.com/')
-		
+	@BeforeTestCase	
+	def sampleBeforeTestCase(TestCaseContext testCaseContext) {
+		println testCaseContext.getTestCaseId()
+		println testCaseContext.getTestCaseVariables()
+		String url = GlobalVariable.url
+		if(url.contains("cura.herokuapp") || url.contains("QA") || url.contains("STG")){
+			System.out.print("Connection Successful!!")
+		}
 	}
-	
-//	def sampleBeforeTestCase(TestCaseContext testCaseContext) {
-//		println testCaseContext.getTestCaseId()
-//		println testCaseContext.getTestCaseVariables()
-//	}
 
 	/**
 	 * Executes after every test case ends.
 	 * @param testCaseContext related information of the executed test case.
 	 */
 	@AfterTestCase
-	def closeBrowser() {
-		WebUI.closeBrowser()
+
+	def sampleAfterTestCase(TestCaseContext testCaseContext) {
+		println testCaseContext.getTestCaseId()
+		println testCaseContext.getTestCaseStatus()
+		String url = GlobalVariable.url
+		if(url.contains("cura.herokuapp") || url.contains("QA") || url.contains("STG")){
+			System.out.print("Connection Closed Successfully!!")
+		}
 	}
-	
-//	def sampleAfterTestCase(TestCaseContext testCaseContext) {
-//		println testCaseContext.getTestCaseId()
-//		println testCaseContext.getTestCaseStatus()
-//	}
 
 	/**
 	 * Executes before every test suite starts.

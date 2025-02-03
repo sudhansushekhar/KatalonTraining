@@ -1,4 +1,5 @@
 import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
+import static com.kms.katalon.core.model.FailureHandling.STOP_ON_FAILURE
 import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
 import static com.kms.katalon.core.testdata.TestDataFactory.findTestData
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
@@ -14,16 +15,33 @@ import com.kms.katalon.core.testobject.TestObject as TestObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
-import internal.GlobalVariable as GlobalVariable
+import internal.GlobalVariable
+
+import static org.junit.Assert.assertEquals
+
 import org.openqa.selenium.Keys as Keys
 
-//BeforeTestCase Listener for every Test Case - Test Case ID & Test Case Variables
+WebUI.openBrowser('')
 
-CustomKeywords.'loginCura.login.loginToCura'(GlobalVariable.url, GlobalVariable.userName, GlobalVariable.password)
+WebUI.maximizeWindow()
 
-WebUI.verifyTextPresent("Make Appointment", false)
+WebUI.navigateToUrl('https://demoqa.com/alerts')
+
+WebUI.waitForPageLoad(10)
+//click on alert
+WebUI.click(findTestObject('Object Repository/Alerts/waitForAlert'), STOP_ON_FAILURE)
+
+WebUI.waitForAlert(6)
+
+//verify alert text
+
+String alertText = WebUI.getAlertText()
+String expAlertText = "This alert appeared after 5 seconds"
+assertEquals(expAlertText, alertText)
+
+
+//alert Accepted
+WebUI.acceptAlert()
 
 WebUI.closeBrowser()
-
-//AfterTestCase Listener for every Test Case- Test Case ID & Test Case Status
 

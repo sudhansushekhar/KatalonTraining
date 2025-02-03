@@ -14,16 +14,35 @@ import com.kms.katalon.core.testobject.TestObject as TestObject
 import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
-import internal.GlobalVariable as GlobalVariable
+import internal.GlobalVariable
+
+import static org.junit.Assert.assertEquals
+
 import org.openqa.selenium.Keys as Keys
 
-//BeforeTestCase Listener for every Test Case - Test Case ID & Test Case Variables
+WebUI.openBrowser('')
+WebUI.maximizeWindow()
 
-CustomKeywords.'loginCura.login.loginToCura'(GlobalVariable.url, GlobalVariable.userName, GlobalVariable.password)
+WebUI.navigateToUrl('https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_alert')
+WebUI.waitForPageLoad(10)
+WebUI.switchToFrame(findTestObject('Object Repository/Frames/frame1'), 2)
 
-WebUI.verifyTextPresent("Make Appointment", false)
+WebUI.click(findTestObject('Object Repository/Frames/TryItBtn'))
 
+//accept alert
+String alertTextActual = WebUI.getAlertText()
+String alertTextExp = "Hello! I am an alert box!"
+
+assertEquals(alertTextActual, alertTextExp)
+
+//Accept alert
+
+WebUI.acceptAlert()
+
+//Return Back to main content
+WebUI.switchToDefaultContent()
+
+String runTextActual = WebUI.getText(findTestObject('Object Repository/Frames/RunBtn'))
+String runTextExp = "Run ❯"
+assertEquals(runTextActual, runTextExp)
 WebUI.closeBrowser()
-
-//AfterTestCase Listener for every Test Case- Test Case ID & Test Case Status
-
