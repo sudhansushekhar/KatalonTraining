@@ -17,10 +17,7 @@ import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
-WebUI.openBrowser('')
-WebUI.maximizeWindow()
-
-WebUI.navigateToUrl('https://katalon-demo-cura.herokuapp.com/')
+//BeforeTestCase Listener for every Test Case - Go to Login Page 
 
 WebUI.click(findTestObject('Object Repository/CuraLoginPage/Page_CURA Healthcare Service/a_Make Appointment'))
 
@@ -33,5 +30,5 @@ WebUI.click(findTestObject('CuraLoginPage/Page_CURA Healthcare Service/button_Lo
 
 WebUI.verifyTextPresent("Make Appointment", false)
 
-WebUI.closeBrowser()
+//AfterTestCase Listener for every Test Case- Close Browser 
 
