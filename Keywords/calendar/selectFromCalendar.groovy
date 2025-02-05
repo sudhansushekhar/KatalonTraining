@@ -82,7 +82,7 @@ public class selectFromCalendar {
 		if(focusedMonth == month) {
 			WebUI.click(findTestObject('Object Repository/Page_CURA Healthcare Service/MonthSelector'))
 		}
-		
+
 		//create test object
 		TestObject monthElement = new TestObject()
 		monthElement.addProperty("xpath", ConditionType.EQUALS, "//span[contains(text(),'" + month + "')]")
