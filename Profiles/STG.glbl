@@ -8,15 +8,18 @@
       <description></description>
       <initValue>'https://katalon-demo-cura.herokuapp.com/'</initValue>
       <name>url</name>
+      <protected>false</protected>
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
       <initValue>'John Doe'</initValue>
       <name>userName</name>
+      <protected>false</protected>
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
       <initValue>'ThisIsNotAPassword'</initValue>
       <name>password</name>
+      <protected>false</protected>
    </GlobalVariableEntity>
 </GlobalVariableEntities>
