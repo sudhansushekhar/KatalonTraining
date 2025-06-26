@@ -31,7 +31,7 @@ pipeline {
                     -projectPath="${PROJECT_DIR}/KatalonTraining.prj" ^
                     -retry=0 ^
                     -testSuitePath="Test Suites/YourSuite" ^
-                    -executionProfile="default" ^
+                    -executionProfile="QA" ^
                     -browserType="Chrome" ^
                     -apiKey="${TESTOPS_API_KEY_VAR}" ^
                     -reportFolder="Reports"
