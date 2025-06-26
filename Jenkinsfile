@@ -52,7 +52,7 @@ pipeline {
         }
         success { // This block runs ONLY if the build fully succeeds
             emailext (
-                to: "${TESTOPS_EMAIL_VAR}", // <<< IMPORTANT: Replace with the actual recipient email
+                to: 'sudgud7@gmail.com', // <<< IMPORTANT: Replace with the actual recipient email
                 subject: "Jenkins Pipeline: ${currentBuild.displayName} - SUCCESS",
                 body: """
                     <p>Hello Team,</p>
@@ -67,7 +67,7 @@ pipeline {
         }
         failure { // This block runs ONLY if the build fails
             emailext (
-                to: "${TESTOPS_EMAIL_VAR}, menka5090@gmail.com", // <<< IMPORTANT: List your recipients here (comma-separated)
+                to: 'sudgud7@gmail.com, menka5090@gmail.com', // <<< IMPORTANT: List your recipients here (comma-separated)
                 subject: "Jenkins Pipeline: ${currentBuild.displayName} - FAILED!",
                 body: """
                     <p>Hello Team,</p>
