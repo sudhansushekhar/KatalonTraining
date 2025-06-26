@@ -34,7 +34,7 @@ pipeline {
                     curl -X PUT ^
                     -H "Content-Type: application/json" ^
                     -H "Authorization: %AUTH_HEADER_VALUE%" ^
-                    "https://testops.katalon.io/api/v1/run-configurations/${TESTOPS_RUN_CONFIG_ID}/execute" ^
+                    "https://testops.katalon.io/api/v1/run-configurations/${env.TESTOPS_RUN_CONFIG_ID}/execute" ^
                     -d "{}"
                     """
                     // After triggering, you might want to add steps to poll the TestOps API
