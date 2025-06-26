@@ -39,8 +39,10 @@ pipeline {
 
     post {
         always {
-            echo 'Archiving reports...'
-            archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
+            node {
+                echo 'Archiving reports...'
+                archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
+            }
         }
     }
 }
