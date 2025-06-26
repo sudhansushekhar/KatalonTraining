@@ -25,15 +25,15 @@ pipeline {
                 withCredentials([string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')]) {
                     // Execute the Katalon Runtime Engine command in a shell.
                     // The backslashes '\' are used for line continuation in the shell script.
-                    sh """
-                    ${KATALON_PATH} -noSplash \\
-                    -runMode=console \\
-                    -projectPath="${PROJECT_DIR}/KatalonTraining.prj" \\
-                    -retry=0 \\
-                    -testSuitePath="Test Suites/YourSuite" \\
-                    -executionProfile="default" \\
-                    -browserType="Chrome" \\
-                    -apiKey="${TESTOPS_API_KEY_VAR}" \\
+                    bat """
+                    ${KATALON_PATH} -noSplash ^
+                    -runMode=console ^
+                    -projectPath="${PROJECT_DIR}/KatalonTraining.prj" ^
+                    -retry=0 ^
+                    -testSuitePath="Test Suites/YourSuite" ^
+                    -executionProfile="default" ^
+                    -browserType="Chrome" ^
+                    -apiKey="${TESTOPS_API_KEY_VAR}" ^
                     -reportFolder="Reports"
                     """
                 }
