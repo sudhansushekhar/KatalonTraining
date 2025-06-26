@@ -2,14 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Path where your Katalon project will be checked out
         PROJECT_DIR     = "${WORKSPACE}/KatalonTraining"
-
-        // Full path to your Katalon Runtime Engine (katalonc)
         KATALON_PATH    = "/opt/katalon/Katalon_Studio_Engine_Linux_64-8.6.5/katalonc"
-
-        // Jenkins credential ID for TestOps API key (set this in Jenkins > Credentials)
-        TESTOPS_API_KEY = credentials('9e57475d-303f-474f-b015-fa3a6c4c342f')
+        TESTOPS_API_KEY = credentials('9e57475d-303f-474f-b015-fa3a6c4c342f') // your Jenkins credential ID
     }
 
     stages {
