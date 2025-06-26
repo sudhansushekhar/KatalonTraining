@@ -44,17 +44,11 @@ pipeline {
     post {
         // 'always' block ensures these actions run regardless of the pipeline's success or failure.
         always {
-            // 'node' block ensures the archiving happens on a Jenkins agent, which is necessary
-            // for file operations like archiving artifacts.
-            // (While 'agent any' covers this, explicitly using 'node' here is harmless and
-            // sometimes used in post-build for clarity or specific agent assignment).
-            node {
-                echo 'Archiving Katalon reports...'
-                // Archives all files named 'Reports' or within 'Reports' directories
-                // found anywhere in the workspace.
-                // 'fingerprint: true' ensures content-based tracking of artifacts.
-                archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
-            }
+            echo 'Archiving Katalon reports...'
+            // Archives all files named 'Reports' or within 'Reports' directories
+            // found anywhere in the workspace.
+            // 'fingerprint: true' ensures content-based tracking of artifacts.
+            archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
         }
     }
 }
