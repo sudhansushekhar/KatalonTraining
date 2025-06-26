@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         // Your API key is still needed for Jenkins to authenticate with TestOps API
-        // The TestOps project ID and Test Plan ID will be needed
-        TESTOPS_PROJECT_ID = "2312994" // Find this in TestOps URL or settings
-        TESTOPS_TEST_PLAN_ID = "1423998" // Find this in TestOps URL or settings
+        // The TestOps project ID and Run Configuration ID will be needed
+        TESTOPS_PROJECT_ID = "2312994" // Your project ID
+        TESTOPS_RUN_CONFIG_ID = "1423998" // <<< CHANGED: Renamed from TESTOPS_TEST_PLAN_ID to TESTOPS_RUN_CONFIG_ID to match usage
     }
 
     stages {
@@ -30,6 +30,9 @@ pipeline {
                         env.AUTH_HEADER_VALUE = "Basic ${encodedAuthString}"
                     }
 
+                    // For debugging, keep this in for now to ensure the value is correct
+                    echo "DEBUG: TESTOPS_RUN_CONFIG_ID value before curl: ${env.TESTOPS_RUN_CONFIG_ID}"
+
                     bat """
                     curl -X PUT ^
                     -H "Content-Type: application/json" ^
@@ -37,9 +40,6 @@ pipeline {
                     "https://testops.katalon.io/api/v1/run-configurations/${env.TESTOPS_RUN_CONFIG_ID}/execute" ^
                     -d "{}"
                     """
-                    // After triggering, you might want to add steps to poll the TestOps API
-                    // to check the execution status and update the Jenkins build status accordingly.
-                    // This is more advanced and involves parsing JSON responses.
                 }
             }
         }
