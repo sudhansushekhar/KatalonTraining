@@ -42,8 +42,10 @@ pipeline {
 
     post {
         always {
-            echo 'Archiving Katalon reports...'
-            archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
+            node {
+                echo 'Archiving Katalon reports...'
+                archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
+            }
         }
     }
 }
