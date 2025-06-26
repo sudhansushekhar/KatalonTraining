@@ -20,23 +20,16 @@ pipeline {
             steps {
                 echo "Triggering Katalon tests via TestOps, leveraging TestCloud for execution..."
 
-                // Securely access both the email and the API key
                 withCredentials([
                     string(credentialsId: 'katalon-testops-email', variable: 'TESTOPS_EMAIL_VAR'),
                     string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')
                 ]) {
-                    // Combine email and API key, then Base64 encode it in Groovy
-                    // Using Base64 from Java's util library for robust encoding
                     script {
                         def authString = "${TESTOPS_EMAIL_VAR}:${TESTOPS_API_KEY_VAR}"
                         def encodedAuthString = java.util.Base64.encoder.encodeToString(authString.getBytes("UTF-8"))
-                        env.AUTH_HEADER_VALUE = "Basic ${encodedAuthString}" // Store in an environment variable for the shell command
+                        env.AUTH_HEADER_VALUE = "Basic ${encodedAuthString}"
                     }
 
-                    // Execute the PUT request using curl
-                    // The 'bat' step is used for Windows agents.
-                    // 'Content-Type: application/json' is specified.
-                    // The body is an empty JSON object '{}' for execution of a pre-configured run-configuration.
                     bat """
                     curl -X PUT ^
                     -H "Content-Type: application/json" ^
