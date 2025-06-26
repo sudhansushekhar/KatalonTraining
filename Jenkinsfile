@@ -30,7 +30,7 @@ pipeline {
                     -runMode=console ^
                     -projectPath="${PROJECT_DIR}/KatalonTraining.prj" ^
                     -retry=0 ^
-                    -testSuitePath="Test Suites/YourSuite" ^
+                    -testSuitePath="Test Suites/LoginSuite2/LoginToCura2" ^
                     -executionProfile="QA" ^
                     -browserType="Chrome" ^
                     -apiKey="${TESTOPS_API_KEY_VAR}" ^
