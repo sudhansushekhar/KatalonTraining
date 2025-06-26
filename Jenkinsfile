@@ -45,9 +45,44 @@ pipeline {
         }
     }
 
+    // --- ADD THIS 'post' SECTION FOR EMAIL NOTIFICATIONS ---
     post {
-        always {
+        always { // This block runs regardless of the build outcome
             echo 'TestCloud handles execution and reporting to TestOps. No local reports to archive.'
         }
+        success { // This block runs ONLY if the build fully succeeds
+            emailext (
+                to: 'your_email@example.com', // <<< IMPORTANT: Replace with the actual recipient email
+                subject: "Jenkins Pipeline: ${currentBuild.displayName} - SUCCESS",
+                body: """
+                    <p>Hello Team,</p>
+                    <p>The Jenkins pipeline '${currentBuild.displayName}' has completed successfully!</p>
+                    <p>Build Number: ${currentBuild.number}</p>
+                    <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Check Katalon TestOps for test results: <a href="https://testops.katalon.io/project/${env.TESTOPS_PROJECT_ID}/test-runs">Katalon TestOps Link</a></p>
+                    <p>Regards,</p>
+                    <p>Your Jenkins Bot</p>
+                """
+            )
+        }
+        failure { // This block runs ONLY if the build fails
+            emailext (
+                to: 'your_email@example.com, other_team_member@example.com', // <<< IMPORTANT: List your recipients here (comma-separated)
+                subject: "Jenkins Pipeline: ${currentBuild.displayName} - FAILED!",
+                body: """
+                    <p>Hello Team,</p>
+                    <p>The Jenkins pipeline '${currentBuild.displayName}' has **FAILED**!</p>
+                    <p>Build Number: ${currentBuild.number}</p>
+                    <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Please investigate the console output for details.</p>
+                    <p>Regards,</p>
+                    <p>Your Jenkins Bot</p>
+                """
+            )
+        }
+        // You can add more conditions if needed, like:
+        // unstable { ... } // For builds that passed but had warnings/failures
+        // fixed { ... }    // For builds that were previously failing and are now successful
+        // aborted { ... }  // For builds manually aborted
     }
 }
