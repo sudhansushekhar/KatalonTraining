@@ -22,7 +22,7 @@ pipeline {
 
                 // Securely access both the email and the API key
                 withCredentials([
-                    string(credentialsId: 'sudgud7@gmail.com', variable: 'TESTOPS_EMAIL_VAR'),
+                    string(credentialsId: 'katalon-testops-email', variable: 'TESTOPS_EMAIL_VAR'),
                     string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')
                 ]) {
                     // Combine email and API key, then Base64 encode it in Groovy
