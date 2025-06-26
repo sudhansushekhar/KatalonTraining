@@ -5,7 +5,7 @@ pipeline {
         // WORKSPACE is a built-in Jenkins environment variable pointing to the job's workspace directory.
         PROJECT_DIR     = "${WORKSPACE}/KatalonTraining"
         // Define the absolute path to your Katalon Runtime Engine executable.
-        KATALON_PATH    = "\katalon\Katalon_Studio_Engine_Windows_64-10.2.2\katalonc.exe"
+        KATALON_PATH    = "/katalon/Katalon_Studio_Engine_Windows_64-10.2.2/katalonc.exe"
     }
 
     stages {
