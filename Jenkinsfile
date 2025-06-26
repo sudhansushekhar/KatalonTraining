@@ -67,7 +67,7 @@ pipeline {
         }
         failure { // This block runs ONLY if the build fails
             emailext (
-                to: '${TESTOPS_EMAIL_VAR}', menka5090@gmail.com', // <<< IMPORTANT: List your recipients here (comma-separated)
+                to: '${TESTOPS_EMAIL_VAR}', 'menka5090@gmail.com', // <<< IMPORTANT: List your recipients here (comma-separated)
                 subject: "Jenkins Pipeline: ${currentBuild.displayName} - FAILED!",
                 body: """
                     <p>Hello Team,</p>
