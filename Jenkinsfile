@@ -1,44 +1,58 @@
 pipeline {
-    agent any
+    agent any // This pipeline can run on any available Jenkins agent
 
     environment {
+        // WORKSPACE is a built-in Jenkins environment variable pointing to the job's workspace directory.
         PROJECT_DIR     = "${WORKSPACE}/KatalonTraining"
+        // Define the absolute path to your Katalon Runtime Engine executable.
         KATALON_PATH    = "/opt/katalon/Katalon_Studio_Engine_Linux_64-8.6.5/katalonc"
-        TESTOPS_API_KEY = credentials('9e57475d-303f-474f-b015-fa3a6c4c342f') // your Jenkins credential ID
     }
 
     stages {
         stage('Checkout Code') {
             steps {
+                echo 'Checking out source code from GitHub...'
+                // 'github-token' is the Jenkins credential ID for your GitHub access token.
+                // This allows Jenkins to clone your private repository.
                 git credentialsId: 'github-token', url: 'https://github.com/sudhansushekhar/KatalonTraining.git'
             }
         }
 
         stage('Run Katalon Tests via TestOps') {
             steps {
-                echo "Running Katalon tests with TestOps reporting..."
-
-                sh """
-                ${KATALON_PATH} -noSplash \
-                -runMode=console \
-                -projectPath="${PROJECT_DIR}/KatalonTraining.prj" \
-                -retry=0 \
-                -testSuitePath="Test Suites/YourSuite" \
-                -executionProfile="default" \
-                -browserType="Chrome" \
-                -apiKey="${TESTOPS_API_KEY}" \
-                -reportFolder="Reports" \
-                -testOpsProjectId=2312994 \
-                -testOpsReleaseId=948092
-                """
+                echo "Running Katalon tests with TestOps reporting enabled..."
+                // 'TESTOPS_API_KEY_VAR' is the name of the environment variable that will hold the secret value.
+                withCredentials([string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')]) {
+                    // Execute the Katalon Runtime Engine command in a shell.
+                    // The backslashes '\' are used for line continuation in the shell script.
+                    sh """
+                    ${KATALON_PATH} -noSplash \\
+                    -runMode=console \\
+                    -projectPath="${PROJECT_DIR}/KatalonTraining.prj" \\
+                    -retry=0 \\
+                    -testSuitePath="Test Suites/YourSuite" \\
+                    -executionProfile="default" \\
+                    -browserType="Chrome" \\
+                    -apiKey="${TESTOPS_API_KEY_VAR}" \\
+                    -reportFolder="Reports"
+                    """
+                }
             }
         }
     }
 
     post {
+        // 'always' block ensures these actions run regardless of the pipeline's success or failure.
         always {
+            // 'node' block ensures the archiving happens on a Jenkins agent, which is necessary
+            // for file operations like archiving artifacts.
+            // (While 'agent any' covers this, explicitly using 'node' here is harmless and
+            // sometimes used in post-build for clarity or specific agent assignment).
             node {
                 echo 'Archiving Katalon reports...'
+                // Archives all files named 'Reports' or within 'Reports' directories
+                // found anywhere in the workspace.
+                // 'fingerprint: true' ensures content-based tracking of artifacts.
                 archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
             }
         }
