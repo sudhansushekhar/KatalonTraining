@@ -1,58 +1,4 @@
 pipeline {
-    agent any // This pipeline can run on any available Jenkins agent
-
-    environment {
-        // WORKSPACE is a built-in Jenkins environment variable pointing to the job's workspace directory.
-        PROJECT_DIR     = "${WORKSPACE}/KatalonTraining"
-        // Define the absolute path to your Katalon Runtime Engine executable.
-        KATALON_PATH    = "\\katalon\\Katalon_Studio_Engine_Windows_64-10.2.2\\katalonc.exe"
-    }
-
-    stages {
-        stage('Checkout Code') {
-            steps {
-                echo 'Checking out source code from GitHub...'
-                // 'github-token' is the Jenkins credential ID for your GitHub access token.
-                // This allows Jenkins to clone your private repository.
-                git credentialsId: 'github-token', url: 'https://github.com/sudhansushekhar/KatalonTraining.git'
-            }
-        }
-
-        stage('Run Katalon Tests via TestOps') {
-            steps {
-                echo "Running Katalon tests with TestOps reporting enabled..."
-                // 'TESTOPS_API_KEY_VAR' is the name of the environment variable that will hold the secret value.
-                withCredentials([string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')]) {
-                    // Execute the Katalon Runtime Engine command in a shell.
-                    // The backslashes '\' are used for line continuation in the shell script.
-                    bat """
-                    ${KATALON_PATH} -noSplash ^
-                    -runMode=console ^
-                    -projectPath="${PROJECT_DIR}/KatalonTraining.prj" ^
-                    -retry=0 ^
-                    -testSuitePath="Test Suites/LoginSuite2/LoginToCura2" ^
-                    -executionProfile="QA" ^
-                    -browserType="Chrome" ^
-                    -apiKey="${TESTOPS_API_KEY_VAR}" ^
-                    -reportFolder="Reports"
-                    """
-                }
-            }
-        }
-    }
-
-    post {
-        // 'always' block ensures these actions run regardless of the pipeline's success or failure.
-        always {
-            echo 'Archiving Katalon reports...'
-            // Archives all files named 'Reports' or within 'Reports' directories
-            // found anywhere in the workspace.
-            // 'fingerprint: true' ensures content-based tracking of artifacts.
-            archiveArtifacts artifacts: '**/Reports/**', fingerprint: true
-        }
-    }
-}
-pipeline {
     agent any
 
     environment {
@@ -65,28 +11,42 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                echo 'Checking out source code (still useful for general pipeline management, even if TestOps pulls its own copy)...'
+                echo 'Checking out source code (still useful for general pipeline management)...'
                 git credentialsId: 'github-token', url: 'https://github.com/sudhansushekhar/KatalonTraining.git'
             }
         }
 
-        stage('Trigger Katalon Tests via TestOps') {
+        stage('Trigger Katalon Tests via TestOps (using TestCloud)') {
             steps {
-                echo "Triggering Katalon tests via TestOps..."
+                echo "Triggering Katalon tests via TestOps, leveraging TestCloud for execution..."
 
-                withCredentials([string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')]) {
-                    // This is a conceptual example. You need the exact TestOps API endpoint for triggering a Test Plan/Run.
-                    // You might use 'curl' to make a POST request to the TestOps API.
-                    // Refer to Katalon TestOps API documentation for the precise endpoint and JSON payload.
+                // Securely access both the email and the API key
+                withCredentials([
+                    string(credentialsId: 'sudgud7@gmail.com', variable: 'TESTOPS_EMAIL_VAR'),
+                    string(credentialsId: 'Katalon-API-key', variable: 'TESTOPS_API_KEY_VAR')
+                ]) {
+                    // Combine email and API key, then Base64 encode it in Groovy
+                    // Using Base64 from Java's util library for robust encoding
+                    script {
+                        def authString = "${TESTOPS_EMAIL_VAR}:${TESTOPS_API_KEY_VAR}"
+                        def encodedAuthString = java.util.Base64.encoder.encodeToString(authString.getBytes("UTF-8"))
+                        env.AUTH_HEADER_VALUE = "Basic ${encodedAuthString}" // Store in an environment variable for the shell command
+                    }
+
+                    // Execute the PUT request using curl
+                    // The 'bat' step is used for Windows agents.
+                    // 'Content-Type: application/json' is specified.
+                    // The body is an empty JSON object '{}' for execution of a pre-configured run-configuration.
                     bat """
-                    curl -X POST ^
+                    curl -X PUT ^
                     -H "Content-Type: application/json" ^
-                    -H "apiKey: ${TESTOPS_API_KEY_VAR}" ^
-                    "https://testops.katalon.com/api/v1/your-project/${TESTOPS_PROJECT_ID}/test-plans/${TESTOPS_TEST_PLAN_ID}/execute" ^
-                    -d "{ \\"agentId\\": \\"your_testops_agent_id\\" }" // Or specify cloud execution, etc.
+                    -H "Authorization: %AUTH_HEADER_VALUE%" ^
+                    "https://testops.katalon.io/api/v1/run-configurations/%TESTOPS_RUN_CONFIG_ID%/execute" ^
+                    -d "{}"
                     """
-                    // You might also need to poll the TestOps API for the execution status
-                    // and report success/failure back to Jenkins. This can get more complex.
+                    // After triggering, you might want to add steps to poll the TestOps API
+                    // to check the execution status and update the Jenkins build status accordingly.
+                    // This is more advanced and involves parsing JSON responses.
                 }
             }
         }
@@ -94,8 +54,7 @@ pipeline {
 
     post {
         always {
-            echo 'No local reports to archive as TestOps handles reporting.'
-            // You might still archive Jenkins' own build logs, but not Katalon reports.
+            echo 'TestCloud handles execution and reporting to TestOps. No local reports to archive.'
         }
     }
 }
