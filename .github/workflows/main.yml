@@ -5,8 +5,9 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    # Run every day at 06:45 AM IST in Asia/Kolkata timezone
-    - cron: '15 1 * * *' # min hour day_of_month month day_of_week(1:15AM UTC + 5:30 (IST is ahead)=6:45AM IST)
+    # Run every day at 06:45 AM IST (01:15 AM UTC)
+    - cron: '15 1 * * *' # min hour day_of_month month day_of_week (UTC time)
+
 jobs:
   build:
     runs-on: windows-latest
@@ -16,7 +17,7 @@ jobs:
     - name: Clean Git Repository # Added step
       run: git clean -fdx
     - name: Katalon Studio
-      uses: katalon-studio/katalon-studio-github-action@v3.0
+      uses: katalon-studio/katalon-studio-github-action@v3.0 # Note: You had @v3.0 here, previously we used @v4.0. Ensure you're consistent or intentionally using v3.
       with:
           version: '10.2.2'
           projectPath: '${{ github.workspace }}'
@@ -30,37 +31,31 @@ jobs:
             -proxy.auth.option=NO_PROXY
             -proxy.system.option=NO_PROXY
             -proxy.system.applyToDesiredCapabilities=true
-# Make sure this step is IDENTICALLY copied and correctly indented
-    - name: Upload Test Reports
+
+    - name: Upload Test Reports # Correct indentation for this step
       uses: actions/upload-artifact@v4
       with:
         name: katalon-test-reports
-        path: ${{ github.workspace }}/Reports/**/*
+        path: ${{ github.workspace }}/Reports/**/* # This uploads the entire Reports folder
         retention-days: 1 # Keep artifacts for 1 day to save storage
-        
-    - name: Download Reports for Email # New step to download the artifact back
+
+    - name: Download Reports for Email # Correct indentation for this step
       uses: actions/download-artifact@v4
       with:
         name: katalon-test-reports # Must match the 'name' from upload-artifact
         path: downloaded-reports # Directory where artifacts will be downloaded
-        
-    - name: Send Email with Report
-      # This action allows sending emails with attachments
-      uses: dawidd6/action-send-mail@v3 # Using v3, check marketplace for latest stable
+            
+    - name: Send Email with Report # Correct indentation for this step
+      uses: dawidd6/action-send-mail@v3
       with:
-        # SMTP server settings
-        server_address: smtp.gmail.com # Example for Gmail, change for your email provider
-        server_port: 465 # Example for Gmail, usually 465 for SSL or 587 for TLS
-        secure: true # Use SSL/TLS
-        username: ${{ secrets.EMAIL_USERNAME }} # Your email address (as a GitHub Secret)
-        password: ${{ secrets.EMAIL_PASSWORD }} # App password/token (as a GitHub Secret)
-        
-        # Email content
+        server_address: smtp.gmail.com
+        server_port: 465
+        secure: true
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
         subject: "Report - ${{ github.workflow }} - ${{ github.ref_name }} Branch - ${{ job.status }}"
-        to: ${{ secrets.EMAIL_USERNAME }} # Replace with your actual email address
-        from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}> # Optional: custom 'from' name
-        
-        # Attach the HTML report
+        to: ${{ secrets.EMAIL_USERNAME }}
+        from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
         # The path should be relative to the 'downloaded-reports' directory
-        # You'll need to find the exact path of the HTML report within the downloaded artifact
-        attachments: "downloaded-reports/katalon-test-reports/Reports/**/*.html" # This pattern should find report.html
+        # The 'download-artifact' action creates a subfolder with the artifact name
+        attachments: "downloaded-reports/katalon-test-reports/Reports/**/*.html"
