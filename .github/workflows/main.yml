@@ -44,6 +44,10 @@ jobs:
         with:
           name: katalon-test-reports # Must match the 'name' from upload-artifact
           path: downloaded-reports # Directory where artifacts will be downloaded
+
+      - name: List Downloaded Reports # <--- ADD THIS STEP AGAIN, IT IS ESSENTIAL
+        run: ls -R downloaded-reports # 'ls -R' for recursive listing on Windows runners (using bash shell)
+        shell: bash # Explicitly use bash shell for 'ls -R' for reliability
               
       - name: Send Email with Report # send email configuration with html report
         uses: dawidd6/action-send-mail@v3
