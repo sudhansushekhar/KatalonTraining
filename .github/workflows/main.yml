@@ -48,7 +48,7 @@ jobs:
       with:
         # SMTP server settings
         server_address: smtp.gmail.com # Example for Gmail, change for your email provider
-        server_port: 587 # Example for Gmail, usually 465 for SSL or 587 for TLS
+        server_port: 465 # Example for Gmail, usually 465 for SSL or 587 for TLS
         secure: true # Use SSL/TLS
         username: ${{ secrets.EMAIL_USERNAME }} # Your email address (as a GitHub Secret)
         password: ${{ secrets.EMAIL_PASSWORD }} # App password/token (as a GitHub Secret)
