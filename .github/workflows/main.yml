@@ -1,4 +1,4 @@
-name: CI
+name: Github Actions
 on:
   push:
     branches: [ master ]
@@ -54,7 +54,7 @@ jobs:
         password: ${{ secrets.EMAIL_PASSWORD }} # App password/token (as a GitHub Secret)
         
         # Email content
-        subject: "Katalon CI Report - ${{ github.workflow }} - ${{ github.ref }}"
+        subject: "Report - ${{ github.workflow }} - ${{ github.ref_name }} Branch - ${{ job.status }}"
         to: ${{ secrets.EMAIL_USERNAME }} # Replace with your actual email address
         from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}> # Optional: custom 'from' name
         
