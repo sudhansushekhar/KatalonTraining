@@ -12,50 +12,50 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Clean Git Repository # Added step
-      run: git clean -fdx
-    - name: Katalon Studio
-      uses: katalon-studio/katalon-studio-github-action@v3.0 # Note: You had @v3.0 here, previously we used @v4.0. Ensure you're consistent or intentionally using v3.
-      with:
-          version: '10.2.2'
-          projectPath: '${{ github.workspace }}'
-          args: >
-            -noSplash -retry=0
-            -testSuitePath="Test Suites/LoginSuite2/LoginToCura2"
-            -browserType="Chrome"
-            -executionProfile="QA"
-            -apiKey=${{ secrets.KATALON_API_KEY }}
-            --config -webui.autoUpdateDrivers=true
-            -proxy.auth.option=NO_PROXY
-            -proxy.system.option=NO_PROXY
-            -proxy.system.applyToDesiredCapabilities=true
-
-    - name: Upload Test Reports # Correct indentation for this step
-      uses: actions/upload-artifact@v4
-      with:
-        name: katalon-test-reports
-        path: ${{ github.workspace }}/Reports/**/* # This uploads the entire Reports folder
-        retention-days: 1 # Keep artifacts for 1 day to save storage
-
-    - name: Download Reports for Email # Correct indentation for this step
-      uses: actions/download-artifact@v4
-      with:
-        name: katalon-test-reports # Must match the 'name' from upload-artifact
-        path: downloaded-reports # Directory where artifacts will be downloaded
-            
-    - name: Send Email with Report # Correct indentation for this step
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        secure: true
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Report - ${{ github.workflow }} - ${{ github.ref_name }} Branch - ${{ job.status }}"
-        to: ${{ secrets.EMAIL_USERNAME }}
-        from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
-        # The path should be relative to the 'downloaded-reports' directory
-        # The 'download-artifact' action creates a subfolder with the artifact name
-        attachments: "downloaded-reports/katalon-test-reports/Reports/**/*.html"
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Clean Git Repository # Added step
+        run: git clean -fdx
+      - name: Katalon Studio
+        uses: katalon-studio/katalon-studio-github-action@v3.0 # Note: You had @v3.0 here, previously we used @v4.0. Ensure you're consistent or intentionally using v3.
+        with:
+            version: '10.2.2'
+            projectPath: '${{ github.workspace }}'
+            args: >
+              -noSplash -retry=0
+              -testSuitePath="Test Suites/LoginSuite2/LoginToCura2"
+              -browserType="Chrome"
+              -executionProfile="QA"
+              -apiKey=${{ secrets.KATALON_API_KEY }}
+              --config -webui.autoUpdateDrivers=true
+              -proxy.auth.option=NO_PROXY
+              -proxy.system.option=NO_PROXY
+              -proxy.system.applyToDesiredCapabilities=true
+  
+      - name: Upload Test Reports # for uploading reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: katalon-test-reports
+          path: ${{ github.workspace }}/Reports/**/* # This uploads the entire Reports folder
+          retention-days: 1 # Keep artifacts for 1 day to save storage
+  
+      - name: Download Reports for Email # for downloading reports
+        uses: actions/download-artifact@v4
+        with:
+          name: katalon-test-reports # Must match the 'name' from upload-artifact
+          path: downloaded-reports # Directory where artifacts will be downloaded
+              
+      - name: Send Email with Report # send email configuration with html report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Report - ${{ github.workflow }} - ${{ github.ref_name }} Branch - ${{ job.status }}"
+          to: ${{ secrets.EMAIL_USERNAME }}
+          from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
+          # The path should be relative to the 'downloaded-reports' directory
+          # The 'download-artifact' action creates a subfolder with the artifact name
+          attachments: "downloaded-reports/katalon-test-reports/Reports/**/*.html"
