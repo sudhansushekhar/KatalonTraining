@@ -4,7 +4,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+  schedule:
+    # Run every day at 06:45 AM IST in Asia/Kolkata timezone
+    - cron: '15 1 * * *' # min hour day_of_month month day_of_week(1:15AM UTC + 5:30 (IST is ahead)=6:45AM IST)
 jobs:
   build:
     runs-on: windows-latest
@@ -61,4 +63,4 @@ jobs:
         # Attach the HTML report
         # The path should be relative to the 'downloaded-reports' directory
         # You'll need to find the exact path of the HTML report within the downloaded artifact
-        attachments: "downloaded-reports/Reports/**/*.html" # This pattern should find report.html
+        attachments: "downloaded-reports/katalon-test-reports/Reports/**/*.html" # This pattern should find report.html
