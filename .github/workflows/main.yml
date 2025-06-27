@@ -62,4 +62,4 @@ jobs:
           from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
           # The path should be relative to the 'downloaded-reports' directory
           # The 'download-artifact' action creates a subfolder with the artifact name
-          attachments: "downloaded-reports/katalon-test-reports/Reports/**/*.html"
+          attachments: "downloaded-reports/**/*.html"
