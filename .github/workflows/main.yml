@@ -16,4 +16,4 @@ jobs:
       with:
           version: '10.2.2'
           projectPath: '${{ github.workspace }}'
-          args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/LoginSuite2/LoginToCura2" -apiKey="9e57475d-303f-474f-b015-fa3a6c4c342f" --config -webui.autoUpdateDrivers=true'
+          args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/LoginSuite2/LoginToCura2" -apiKey="${{ secrets.KATALON_API_KEY }}" --config -webui.autoUpdateDrivers=true'
