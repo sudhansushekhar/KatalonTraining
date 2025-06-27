@@ -34,3 +34,31 @@ jobs:
       with:
         name: katalon-test-reports
         path: ${{ github.workspace }}/Reports/**/*
+        retention-days: 1 # Keep artifacts for 1 day to save storage
+        
+    - name: Download Reports for Email # New step to download the artifact back
+      uses: actions/download-artifact@v4
+      with:
+        name: katalon-test-reports # Must match the 'name' from upload-artifact
+        path: downloaded-reports # Directory where artifacts will be downloaded
+        
+    - name: Send Email with Report
+      # This action allows sending emails with attachments
+      uses: dawidd6/action-send-mail@v3 # Using v3, check marketplace for latest stable
+      with:
+        # SMTP server settings
+        server_address: smtp.gmail.com # Example for Gmail, change for your email provider
+        server_port: 465 # Example for Gmail, usually 465 for SSL or 587 for TLS
+        secure: true # Use SSL/TLS
+        username: ${{ secrets.EMAIL_USERNAME }} # Your email address (as a GitHub Secret)
+        password: ${{ secrets.EMAIL_PASSWORD }} # App password/token (as a GitHub Secret)
+        
+        # Email content
+        subject: "Katalon CI Report - ${{ github.workflow }} - ${{ github.ref }}"
+        to: your_email@example.com # Replace with your actual email address
+        from: GitHub Actions <your_email@example.com> # Optional: custom 'from' name
+        
+        # Attach the HTML report
+        # The path should be relative to the 'downloaded-reports' directory
+        # You'll need to find the exact path of the HTML report within the downloaded artifact
+        attachments: "downloaded-reports/Reports/**/*.html" # This pattern should find report.html
