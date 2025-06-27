@@ -28,3 +28,9 @@ jobs:
             -proxy.auth.option=NO_PROXY
             -proxy.system.option=NO_PROXY
             -proxy.system.applyToDesiredCapabilities=true
+# Make sure this step is IDENTICALLY copied and correctly indented
+    - name: Upload Test Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: katalon-test-reports
+        path: ${{ github.workspace }}/Reports/**/*
