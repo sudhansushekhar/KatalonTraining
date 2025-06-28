@@ -7,10 +7,31 @@ on:
   schedule:
     # Run every day at 06:45 AM IST (01:15 AM UTC)
     - cron: '15 1 * * *' # min hour day_of_month month day_of_week (UTC time)
-
+    
+  workflow_dispatch: # <--- THIS MUST BE DIRECTLY UNDER 'on:', 2 spaces in
+    inputs:
+      browser:
+        description: 'Browser to run tests on'
+        required: true
+        default: 'Chrome (headless)'
+        type: choice
+        options:
+          - Chrome
+          - Firefox
+          - Edge
+          - Chrome (headless)
+          - Firefox (headless)
+      os: # <--- New input for OS
+        description: 'Operating System to run tests on'
+        required: true
+        default: 'windows-latest' # Default to Windows
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
 jobs:
   build:
-    runs-on: ubuntu-latest #windows-latest #
+    runs-on: ${{ github.event.inputs.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +45,7 @@ jobs:
             args: >
               -noSplash -retry=0
               -testSuitePath="Test Suites/LoginSuite2/LoginToCura2"
-              -browserType="Chrome (headless)"
+              -browserType="${{ github.event.inputs.browser }}"
               -executionProfile="QA"
               -apiKey=${{ secrets.KATALON_API_KEY }}
               --config -webui.autoUpdateDrivers=true
