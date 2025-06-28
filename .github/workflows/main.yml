@@ -7,10 +7,10 @@ on:
   schedule:
     # Run every day at 06:45 AM IST (01:15 AM UTC)
     - cron: '15 1 * * *' # min hour day_of_month month day_of_week (UTC time)
-    
-  workflow_dispatch: # <--- THIS MUST BE DIRECTLY UNDER 'on:', 2 spaces in
-    inputs:
-      browser:
+
+  workflow_dispatch: # <-- Correctly indented (2 spaces)
+    inputs:          # <-- This needs 4 spaces of indentation (2 spaces from 'workflow_dispatch:')
+      browser:       # <-- This needs 6 spaces of indentation
         description: 'Browser to run tests on'
         required: true
         default: 'Chrome (headless)'
@@ -29,6 +29,7 @@ on:
         options:
           - ubuntu-latest
           - windows-latest
+
 jobs:
   build:
     runs-on: ${{ github.event.inputs.os }}
